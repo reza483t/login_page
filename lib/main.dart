@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -8,10 +9,13 @@ void main() => runApp(MaterialApp(
     ));
 
 class HomePage extends StatelessWidget {
+  var Gmailtextfild = TextEditingController();
+  var Passwordtextfild = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
@@ -82,6 +86,7 @@ class HomePage extends StatelessWidget {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: Gmailtextfild,
                                   decoration: InputDecoration(
                                       hintText: "Email",
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -94,6 +99,7 @@ class HomePage extends StatelessWidget {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: Passwordtextfild,
                                   decoration: InputDecoration(
                                       hintText: "Password",
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -107,13 +113,35 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: 80,),
                       Container(
                         height: 50,
-                        margin: EdgeInsets.symmetric(horizontal: 50),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.orange.shade900
-                        ),
+                        // margin: EdgeInsets.symmetric(horizontal: 50),
+                        // decoration: BoxDecoration(
+                        //   borderRadius: BorderRadius.circular(50),
+                        //   color: Colors.orange.shade900
+                        
                         child: Center(
-                          child: Text("login",style: TextStyle(color: Colors.white,fontSize: 20),),
+                          child: ElevatedButton(
+  style: ElevatedButton.styleFrom(onSurface: Colors.black),
+  onPressed: (){
+                showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text( Gmailtextfild.text),
+                  content: Text(Passwordtextfild.text),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('ok'),
+                    ),
+                  ],
+                );
+              },
+            );
+  },
+  child: Text('ElevatedButton with custom disabled colors'),
+)
                         ),
                       )
 
