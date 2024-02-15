@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations.dart';
+import 'package:http/http.dart' as http;
+import 'package:convert/convert.dart';
+import 'package:login_page/dashbord_Page.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -9,13 +14,22 @@ void main() => runApp(MaterialApp(
     ));
 
 class HomePage extends StatelessWidget {
-  var Gmailtextfild = TextEditingController();
-  var Passwordtextfild = TextEditingController();
+  final TextEditingController Gmailtextfild = TextEditingController();
+  final TextEditingController Passwordtextfild = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
+
+    var data = window.localStorage['tokensave'];
+    var length = data?.length;
+    debugPrint(length.toString());
+     if(length!=0){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> dashbord_Page(),),);
+    }else{
+      debugPrint("Login page");
+    }
     return Scaffold(
       body: Container(
-        
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
@@ -86,7 +100,7 @@ class HomePage extends StatelessWidget {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
-                                controller: Gmailtextfild,
+                                  controller: Gmailtextfild,
                                   decoration: InputDecoration(
                                       hintText: "Email",
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -99,52 +113,54 @@ class HomePage extends StatelessWidget {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
-                                controller: Passwordtextfild,
+                                  controller: Passwordtextfild,
                                   decoration: InputDecoration(
                                       hintText: "Password",
                                       hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none
-                                      )
-                                      ),
+                                      border: InputBorder.none)),
                             )
                           ],
                         ),
                       ),
-                      SizedBox(height: 80,),
+                      SizedBox(
+                        height: 80,
+                      ),
                       Container(
                         height: 50,
                         // margin: EdgeInsets.symmetric(horizontal: 50),
                         // decoration: BoxDecoration(
                         //   borderRadius: BorderRadius.circular(50),
                         //   color: Colors.orange.shade900
-                        
-                        child: Center(
-                          child: ElevatedButton(
-  style: ElevatedButton.styleFrom(onSurface: Colors.black),
-  onPressed: (){
-                showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text( Gmailtextfild.text),
-                  content: Text(Passwordtextfild.text),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('ok'),
-                    ),
-                  ],
-                );
-              },
-            );
-  },
-  child: Text('ElevatedButton with custom disabled colors'),
-)
-                        ),
-                      )
 
+                        child: Center(
+                            child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            onSurface: Colors.black,
+                            backgroundColor: Colors.orange,
+                          ),
+                          onPressed: () {
+                            sendData();
+                            //               showDialog(
+                            //             context: context,
+                            //             builder: (BuildContext context) {
+                            //               return AlertDialog(
+                            //                 title: Text( Gmailtextfild.text),
+                            //                 content: Text(Passwordtextfild.text),
+                            //                 actions: <Widget>[
+                            //                   TextButton(
+                            //                     onPressed: () {
+                            //                       Navigator.of(context).pop();
+                            //                     },
+                            //                     child: Text('ok'),
+                            //                   ),
+                            //                 ],
+                            //               );
+                            //             },
+                            //           );
+                          },
+                          child: Text('Login'),
+                        )),
+                      )
                     ],
                   ),
                 ),
@@ -154,5 +170,26 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future sendData() async {
+    var url = Uri.parse(
+        "https://api.timez.ir/docs#/account/get_token_account_auth_token_post");
+    Map<String, String> body = <String, String>{
+      "username": Gmailtextfild.text,
+      "password": Passwordtextfild.text,
+    };
+    var response = await http.post(url, body: body);
+    var jsonOutput = json.decode(response.body);
+    debugPrint("json output $jsonOutput ");
+    window.localStorage['tokensave']=jsonOutput.toString();
+    var data = window.localStorage['tokensave'];
+    var length = data?.length;
+    debugPrint(length.toString());
+     if(length==28){
+      debugPrint("wellcom to the new page");
+    }else{
+      debugPrint("Login page");
+    }
   }
 }
