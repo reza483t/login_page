@@ -16,15 +16,19 @@ void main() => runApp(MaterialApp(
 class HomePage extends StatelessWidget {
   final TextEditingController Gmailtextfild = TextEditingController();
   final TextEditingController Passwordtextfild = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     var data = window.localStorage['tokensave'];
     var length = data?.length;
-    debugPrint(length.toString());
-     if(length!=null){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> dashbord_Page(),),);
-    }else{
+    if (length != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => dashbord_Page(),
+        ),
+      );
+    } else {
       debugPrint("Login page");
     }
     return Scaffold(
@@ -139,6 +143,18 @@ class HomePage extends StatelessWidget {
                           ),
                           onPressed: () {
                             sendData();
+                            var data = window.localStorage['tokensave'];
+                            var length = data?.length;
+                            if (length != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => dashbord_Page(),
+                                ),
+                              );
+                            } else {
+                              debugPrint("Login page");
+                            }
                             //               showDialog(
                             //             context: context,
                             //             builder: (BuildContext context) {
@@ -172,8 +188,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future sendData() async {
-    var url = Uri.parse(
-        "https://api.timez.ir/docs#/account/get_token_account_auth_token_post");
+    var url = Uri.parse("https://api.timez.ir/account/auth/token");
     Map<String, String> body = <String, String>{
       "username": Gmailtextfild.text,
       "password": Passwordtextfild.text,
@@ -181,14 +196,6 @@ class HomePage extends StatelessWidget {
     var response = await http.post(url, body: body);
     var jsonOutput = json.decode(response.body);
     debugPrint("json output $jsonOutput ");
-    window.localStorage['tokensave']=jsonOutput.toString();
-    var data = window.localStorage['tokensave'];
-    var length = data?.length;
-    debugPrint(length.toString());
-     if(length==28){
-      debugPrint("wellcom to the new page");
-    }else{
-      debugPrint("Login page");
-    }
+    window.localStorage['tokensave'] = jsonOutput.toString();
   }
 }
