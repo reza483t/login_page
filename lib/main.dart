@@ -19,11 +19,10 @@ class HomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-
     var data = window.localStorage['tokensave'];
     var length = data?.length;
     debugPrint(length.toString());
-     if(length!=0){
+     if(length!=null){
       Navigator.push(context, MaterialPageRoute(builder: (context)=> dashbord_Page(),),);
     }else{
       debugPrint("Login page");
