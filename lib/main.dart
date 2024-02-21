@@ -4,14 +4,19 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:convert/convert.dart';
 import 'package:login_page/dashbord_Page.dart';
 
-void main() => runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    ));
+void main() => runApp(MaterialApp.router
+(
+routerConfig: GoRouter(routes: [
+GoRoute(path: "/",builder: (context, state) {return HomePage();},),
+GoRoute(path: "/dashbord",builder: (context, state) {return dashbord_Page();},),
+]),
+debugShowCheckedModeBanner: false,
+));
 
 class HomePage extends StatelessWidget {
   final TextEditingController Gmailtextfild = TextEditingController();
@@ -22,12 +27,7 @@ class HomePage extends StatelessWidget {
     var data = window.localStorage['tokensave'];
     var length = data?.length;
     if (length != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => dashbord_Page(),
-        ),
-      );
+      context.go("/dashbord");
     } else {
       debugPrint("Login page");
     }
@@ -146,32 +146,10 @@ class HomePage extends StatelessWidget {
                             var data = window.localStorage['tokensave'];
                             var length = data?.length;
                             if (length != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => dashbord_Page(),
-                                ),
-                              );
+                            context.go("/dashbord");
                             } else {
                               debugPrint("Login page");
                             }
-                            //               showDialog(
-                            //             context: context,
-                            //             builder: (BuildContext context) {
-                            //               return AlertDialog(
-                            //                 title: Text( Gmailtextfild.text),
-                            //                 content: Text(Passwordtextfild.text),
-                            //                 actions: <Widget>[
-                            //                   TextButton(
-                            //                     onPressed: () {
-                            //                       Navigator.of(context).pop();
-                            //                     },
-                            //                     child: Text('ok'),
-                            //                   ),
-                            //                 ],
-                            //               );
-                            //             },
-                            //           );
                           },
                           child: Text('Login'),
                         )),
