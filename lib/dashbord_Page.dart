@@ -6,12 +6,13 @@ import 'package:login_page/main.dart';
 class dashbord_Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    debugPrint(window.localStorage['tokensave'].toString());
     var data = window.localStorage['tokensave'];
     var length = data?.length;
     if (length == null) {
       context.go("/");
     } else {
-      debugPrint("Login page");
+      debugPrint("dashbord page run");
     }
     return Scaffold(
         appBar: AppBar(title: Text("Dashbord_Page")),
@@ -30,15 +31,9 @@ class dashbord_Page extends StatelessWidget {
               ),
               onPressed: () {
                 window.localStorage.clear();
-                var data = window.localStorage['tokensave'];
-                var length = data?.length;
-                if (length == null) {
-                  context.go("/");
-                } else { 
-                  debugPrint("Login page");
-                }
+                context.go("/");
               },
-              child: Text(
+              child: const Text(
                 "clear local stroch",
                 style: TextStyle(fontSize: 35),
               ),

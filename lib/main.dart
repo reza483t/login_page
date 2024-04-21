@@ -9,14 +9,23 @@ import 'package:http/http.dart' as http;
 import 'package:convert/convert.dart';
 import 'package:login_page/dashbord_Page.dart';
 
-void main() => runApp(MaterialApp.router
-(
-routerConfig: GoRouter(routes: [
-GoRoute(path: "/",builder: (context, state) {return HomePage();},),
-GoRoute(path: "/dashbord",builder: (context, state) {return dashbord_Page();},),
-]),
-debugShowCheckedModeBanner: false,
-));
+void main() => runApp(MaterialApp.router(
+      routerConfig: GoRouter(routes: [
+        GoRoute(
+          path: "/",
+          builder: (context, state) {
+            return HomePage();
+          },
+        ),
+        GoRoute(
+          path: "/dashbord",
+          builder: (context, state) {
+            return dashbord_Page();
+          },
+        ),
+      ]),
+      debugShowCheckedModeBanner: false,
+    ));
 
 class HomePage extends StatelessWidget {
   final TextEditingController Gmailtextfild = TextEditingController();
@@ -24,13 +33,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = window.localStorage['tokensave'];
-    var length = data?.length;
-    if (length != null) {
-      context.go("/dashbord");
-    } else {
-      debugPrint("Login page");
-    }
+    debugPrint(window.localStorage['tokensave'].toString());
+    checklocal(context);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -143,15 +147,9 @@ class HomePage extends StatelessWidget {
                           ),
                           onPressed: () {
                             sendData();
-                            var data = window.localStorage['tokensave'];
-                            var length = data?.length;
-                            if (length != null) {
-                            context.go("/dashbord");
-                            } else {
-                              debugPrint("Login page");
-                            }
+                            checklocal(context);
                           },
-                          child: Text('Login'),
+                          child: Text('Login', style: TextStyle(fontSize: 35)),
                         )),
                       )
                     ],
@@ -175,5 +173,15 @@ class HomePage extends StatelessWidget {
     var jsonOutput = json.decode(response.body);
     debugPrint("json output $jsonOutput ");
     window.localStorage['tokensave'] = jsonOutput.toString();
+  }
+
+  void checklocal(BuildContext context) {
+    var data = window.localStorage['tokensave'];
+    var length = data?.length;
+    if (length != null) {
+      context.go("/dashbord");
+    } else {
+      debugPrint("Login page");
+    }
   }
 }
